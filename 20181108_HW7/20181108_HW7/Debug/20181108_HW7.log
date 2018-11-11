@@ -1,3 +1,4 @@
 ﻿  20180369.c
-c:\users\caucse\desktop\20181108_hw7\20181108_hw7\20180369.c(61): warning C4716: 'indexAddMat': 값을 반환해야 합니다.
-  20181108_HW7.vcxproj -> C:\Users\caucse\Desktop\20181108_HW7\Debug\20181108_HW7.exe
+c:\users\p\desktop\gits\hw_programming\20181108_hw7\20181108_hw7\20180369.c(63): warning C4047: '초기화 중': 'int (*)[3]'의 간접 참조 수준이 'int'과(와) 다릅니다.
+c:\users\p\desktop\gits\hw_programming\20181108_hw7\20181108_hw7\20180369.c(64): warning C4047: '초기화 중': 'int (*)[3]'의 간접 참조 수준이 'int'과(와) 다릅니다.
+  20181108_HW7.vcxproj -> C:\Users\P\Desktop\Gits\HW_Programming\20181108_HW7\Debug\20181108_HW7.exe
