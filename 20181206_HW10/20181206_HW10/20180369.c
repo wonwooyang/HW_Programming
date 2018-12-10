@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-
+#include <stdlib.h>
 /*
-
 Line count
 word count
 character count
@@ -15,78 +14,92 @@ character count
 워드카운트 > 토큰단위로 잘라서 갯수 측정 > string 라이브러리 사용
 케릭터카운트 > 워드 단위에서 length 사용 > 공백 만 빼고 나머지 다 카운트
 */
+typedef struct Values
+{
+	int lc;
+	int wc;
+	int cc;
+}vals;
 
-void main() {
+vals count(FILE *fp1);
+void revf(FILE *fp1, FILE *fp2);
+char* atoA(char *str);
+
+int main(int argc, char *argv[]) {
 	printf_s("\n20180369 양원우\n");
-	int lc, wc, cc;
-	char readstr[300];
+	if (argc != 2) {
+		printf("\n실행 실패 : 파일 이름만을 정확히 입력하세요 (Ex: myfile.txt)\n");
+		system("pause > nul");
+		return 1;
+	}
+
+	vals counts = { 0, 0, 0 };
+	int err1, err2;
 	FILE *fp1, *fp2;
 
-	fopen(&fp1, "OSParadigmShift.txt", "r"); 
-	fopen(&fp2, "OSParadigmShift.rev", "w");
-	if (fp1 && fp2) {
-		printf_s("\n파일 열림\n");
-	}
-	else {
-		printf_s("\n파일 안열림\n");
-	}
-	
-	char * sptr = strtok(;
-	while (fgets(fp1, 300, readstr) != EOF) {
+	err1 = fopen_s(&fp1, "OSParadigmShift.txt", "r");
+	err2 = fopen_s(&fp2, "OSParadigmShift.rev", "w");
 
-		strtok()
-		
-		//strtok 사용 delimeter 로 여러개 넣어서 word 단위로 자르기 https://dojang.io/mod/page/view.php?id=376 참고
-		//str 라이브러리를 씁시다
-		lc++;
-	};
+	if (err1 != 0 || err2 != 0) {
+		printf_s("\n파일 열기 실패 : 혹시 해당 파일이 같은 폴더에 없는 것 아닙니까?\n");
+		return 1;
+	}
+
+	fclose(fp1);
+	fclose(fp2);
+
+	counts = count(fp1);
+	printf_s("\n  <Count Result>\n");
+	printf("\n Line count : %d\n Word count : %d\n Char count : %d\n", counts.lc, counts.wc, counts.cc);
+
+	printf_s("\n  <Upper <-> Lower>\n");
+	revf(fp1, fp2);
+	printf("\n변경된 내용이 OSParadigmShift.rev 에 저장되었습니다.\n\n");
+	system("pause > nul");
+	return 0;
+}
+vals count(FILE *fp1) {
+	vals counting = { 0, 0, 0 };
+	char readstr[300];
+
+	fopen_s(&fp1, "OSParadigmShift.txt", "r");
 	
+	while (fgets(readstr, 300, fp1) != NULL) {
+		char *context;
+		char *sptr = strtok_s(readstr, " ", &context);
+
+		while (sptr != NULL) {
+			counting.cc += strlen(sptr);
+			sptr = strtok_s(NULL, " ", &context);
+			counting.wc++;
+		}
+		counting.lc++;
+	};
 	fclose(fp1);
 	
-	printf_s("\n<Count Result>\n");
+	return counting;
 }
+void revf(FILE *fp1, FILE *fp2) {
+	char readstr[300];
 
+	fopen_s(&fp1, "OSParadigmShift.txt", "r");
+	fopen_s(&fp2, "OSParadigmShift.rev", "w");
 
-/*
-void reverse(FILE * fp);
-void main() {
-	printf_s("\n20180369 양원우\n");
-	char name[20], email[20];
-	FILE *fp;
-
-	printf_s("\n\n이름과 email 주소를 입력하세요.\n이름 : ");
-	scanf_s("%s", name, sizeof(name));
-	printf_s("주소 : ");
-	scanf_s("%s", email, sizeof(email));
-
-	fopen_s(&fp, "myinfo.txt", "w");
-	if (fp) {
-		printf_s("\n파일 W열기 성공\n");
+	while (fgets(readstr, 300, fp1) != NULL) {
+		strcpy_s(readstr, 300, atoA(readstr));
+		fputs(readstr, fp2);
 	}
-	else {
-		printf_s("\n파일 W열기 실패\n");
-	}
-
-	fputs(name, fp);
-	fputs("\n", fp);
-	fputs(email, fp);
-
-	fclose(fp);
-
-	reverse(fp);
+	fclose(fp1);
+	fclose(fp2);
 }
-void reverse(FILE * fp) {
-	char readstr[40];
-	fopen_s(&fp, "myinfo.txt", "r"); 
-	if (fp) {
-		printf_s("\n파일 R열기 성공\n");
+char* atoA(char *str) {
+	for (int i = 0; i < 300; i++) {
+		if (str[i] >= 'A' && str[i] <= 'Z') {
+			str[i] = str[i] + 32;
+		}
+		else if (str[i] >= 'a' && str[i] <= 'z') {
+			str[i] = str[i] - 32;
+		}
 	}
-	else {
-		printf_s("\n파일 R열기 실패\n");
-	}
-
-	fgets(readstr, 40, fp);
-	puts(readstr); // 이거 reverse 만 해둠
-	fclose(fp);
+	return str;
 }
-*/
